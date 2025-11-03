@@ -1,6 +1,6 @@
 Symbol | Expand to
 --- | --- 
-**PROGRAM** | PROGRAM **VARIABLE** ; **BLOCK** .
+**PROGRAM** | PROGRAM **$ID** ; **BLOCK** .
 **BLOCK** | **DECLARATIONS** **COMPOUND_STATEMENT**
 **DECLARATIONS** | VAR (**VARIABLE_DECLARATION** ;)+
 | | _empty_
