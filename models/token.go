@@ -6,6 +6,10 @@ const (
 	Reserved TokenType = "reserved"
 	Program  TokenType = "program"
 	Variable TokenType = "variable"
+	Block    TokenType = "block"
+
+	Declaration       TokenType = "declaration"
+	CompoundStatement TokenType = "compoundStatement"
 )
 
 type Token struct {

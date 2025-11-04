@@ -29,9 +29,6 @@ func (s *InputSlide) NextWithoutSpace() rune {
 	nextChar := s.Next()
 	for ; nextChar == SPACE && !s.IsEnd(); nextChar = s.Next() {
 	}
-	if s.IsEnd() {
-		return rune(0)
-	}
 	return nextChar
 }
 
