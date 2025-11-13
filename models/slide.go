@@ -6,9 +6,17 @@ type InputSlide struct {
 }
 
 var (
-	SPACE rune = []rune(" ")[0]
-	EOF   rune = 0
+	SPACE   rune = []rune(" ")[0]
+	NEWLINE rune = []rune("\n")[0]
+	TAB     rune = []rune("\t")[0]
+	EOF     rune = 0
 )
+
+var ISEMPTY = map[rune]bool{
+	SPACE:   true,
+	NEWLINE: true,
+	TAB:     true,
+}
 
 func NewSlide(sourceCode string) *InputSlide {
 	return &InputSlide{
@@ -27,7 +35,7 @@ func (s *InputSlide) IsEnd() bool {
 
 func (s *InputSlide) NextWithoutSpace() rune {
 	nextChar := s.Next()
-	for ; nextChar == SPACE && !s.IsEnd(); nextChar = s.Next() {
+	for ; ISEMPTY[nextChar] && !s.IsEnd(); nextChar = s.Next() {
 	}
 	return nextChar
 }
@@ -51,4 +59,8 @@ func (s *InputSlide) Peek() rune {
 		return EOF
 	}
 	return s.underlyingSlide[s.seeker]
+}
+
+func (s *InputSlide) SetBack(i int) {
+	s.seeker -= i
 }

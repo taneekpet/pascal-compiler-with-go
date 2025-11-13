@@ -116,13 +116,62 @@ func parseBlock(slide *models.InputSlide) (
 func parseDeclarations(slide *models.InputSlide) (
 	result models.Token, err error,
 ) {
+	// empty
 	result = models.Token{
 		Lexemes:     []rune(""),
 		IdReference: nil,
 		Type:        models.Declaration,
-		ExpandedTo:  nil,
+		ExpandedTo:  make([]models.Token, 0),
+	}
+
+	slide.PeekWithoutSpace()
+	expected := []string{"V", "A", "R"}
+	for i := 0; i < len(expected); i++ {
+		chr := slide.Next()
+		if string(chr) != expected[i] {
+			slide.SetBack(i + 1)
+			return
+		}
+	}
+	result.ExpandedTo = append(
+		result.ExpandedTo,
+		models.Token{
+			Lexemes:     []rune("VAR"),
+			IdReference: nil,
+			Type:        models.Reserved,
+			ExpandedTo:  nil,
+		},
+	)
+
+	for {
+		slide.PeekWithoutSpace()
+		tmpVarDec, parsed, err := parseVariableDeclaration(slide)
+		if err != nil {
+			slide.SetBack(parsed)
+			break
+		}
+
+		slide.PeekWithoutSpace()
+		chr := slide.Next()
+		if string(chr) != ";" {
+			slide.SetBack(1)
+			break
+		}
+
+		// parse success, append
+		result.ExpandedTo = append(
+			result.ExpandedTo,
+			tmpVarDec,
+			models.Token{
+				Lexemes:     []rune(";"),
+				IdReference: nil,
+				Type:        models.Reserved,
+				ExpandedTo:  nil,
+			},
+		)
 	}
 	return
+
 }
 
 func parseCompoundStatement(slide *models.InputSlide) (
@@ -132,7 +181,19 @@ func parseCompoundStatement(slide *models.InputSlide) (
 		Lexemes:     []rune(""),
 		IdReference: nil,
 		Type:        models.CompoundStatement,
-		ExpandedTo:  make([]models.Token, 3),
+		ExpandedTo:  make([]models.Token, 0),
+	}
+	return
+}
+
+func parseVariableDeclaration(slide *models.InputSlide) (
+	result models.Token, parsed int, err error,
+) {
+	result = models.Token{
+		Lexemes:     []rune(""),
+		IdReference: nil,
+		Type:        models.VariableDeclaration,
+		ExpandedTo:  make([]models.Token, 0),
 	}
 	return
 }

@@ -8,8 +8,9 @@ const (
 	Variable TokenType = "variable"
 	Block    TokenType = "block"
 
-	Declaration       TokenType = "declaration"
-	CompoundStatement TokenType = "compoundStatement"
+	Declaration         TokenType = "declaration"
+	CompoundStatement   TokenType = "compoundStatement"
+	VariableDeclaration TokenType = "variableDeclaration"
 )
 
 type Token struct {
